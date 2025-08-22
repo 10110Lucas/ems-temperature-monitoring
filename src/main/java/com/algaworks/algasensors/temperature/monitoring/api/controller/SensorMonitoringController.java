@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/sensors/{sensorId}/monitoring")
@@ -33,20 +34,11 @@ public class SensorMonitoringController {
                 .build();
     }
 
-    private SensorMonitoring findByIdOrDefault(TSID sensorId) {
-        return repository.findById(new SensorId(sensorId))
-                .orElse(SensorMonitoring.builder()
-                        .id(new SensorId(sensorId))
-                        .enabled(false)
-                        .lastTemperature(null)
-                        .updatedAt(null)
-                        .build());
-    }
-
     @PutMapping("/enable")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void enable(@PathVariable TSID sensorId) {
         SensorMonitoring found = findByIdOrDefault(sensorId);
+        if (Boolean.TRUE.equals(found.getEnabled())) throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Sensor already enabled");
         found.setEnabled(true);
         repository.saveAndFlush(found);
     }
@@ -57,5 +49,15 @@ public class SensorMonitoringController {
         SensorMonitoring found = findByIdOrDefault(sensorId);
         found.setEnabled(false);
         repository.saveAndFlush(found);
+    }
+
+    private SensorMonitoring findByIdOrDefault(TSID sensorId) {
+        return repository.findById(new SensorId(sensorId))
+                .orElse(SensorMonitoring.builder()
+                        .id(new SensorId(sensorId))
+                        .enabled(false)
+                        .lastTemperature(null)
+                        .updatedAt(null)
+                        .build());
     }
 }
