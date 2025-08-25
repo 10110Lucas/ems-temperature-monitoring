@@ -21,7 +21,7 @@ public class RabbitMQListener {
     private final TemperatureMonitoringService service;
 
     @SneakyThrows
-    @RabbitListener(queues = QUEUE)
+    @RabbitListener(queues = QUEUE, concurrency = "2-3")
     public void handle(@Payload TemperatureLogData data) {
         service.processTemperatureReading(data);
         Thread.sleep(Duration.ofSeconds(5));
