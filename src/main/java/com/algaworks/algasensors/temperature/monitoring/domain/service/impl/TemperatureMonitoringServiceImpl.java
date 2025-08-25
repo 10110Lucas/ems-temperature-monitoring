@@ -25,8 +25,8 @@ public class TemperatureMonitoringServiceImpl implements TemperatureMonitoringSe
 
     @Transactional
     public void processTemperatureReading(TemperatureLogData data) {
-        log.info("processTemperatureReading");
-        if (data.getValue().equals(10.5)) throw new RuntimeException("Testando Erro Forçado");
+//        log.info("processTemperatureReading");
+//        if (data.getValue().equals(10.5)) throw new RuntimeException("Testando Erro Forçado");
 
         sensorMonitoringRepository.findById(new SensorId(data.getSensorId()))
                 .ifPresentOrElse(
