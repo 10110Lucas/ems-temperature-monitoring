@@ -21,20 +21,17 @@ public class SensorAlertServiceImpl implements SensorAlertService {
                 .ifPresentOrElse(
                         alert -> {
                             if (alert.getMaxTemperature() != null && data.getValue().compareTo(alert.getMaxTemperature()) >= 0) {
-                                logIgnoredAlert("Alert Max Temp: SensorId {} Temp {}", data);
-
+                                logAlert("Alert Max Temp: SensorId {} Temp {}", data);
                             } else if (alert.getMinTemperature() != null && data.getValue().compareTo(alert.getMinTemperature()) <= 0) {
-                                logIgnoredAlert("Alert Min Temp: SensorId {} Temp {}", data);
+                                logAlert("Alert Min Temp: SensorId {} Temp {}", data);
                             } else {
-                                logIgnoredAlert("Alert Ignored: SensorId {} Temp {}", data);
+                                logAlert("Alert Ignored: SensorId {} Temp {}", data);
                             }
-                        }, () -> {
-                            logIgnoredAlert("Alert Ignored: SensorId {} Temp {}", data);
-                        }
+                        }, () -> logAlert("Alert Ignored: SensorId {} Temp {}", data)
                 );
     }
 
-    private static void logIgnoredAlert(String format, TemperatureLogData data) {
+    private static void logAlert(String format, TemperatureLogData data) {
         log.info(format,
                 data.getSensorId(), data.getValue());
     }
