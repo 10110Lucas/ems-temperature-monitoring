@@ -6,7 +6,6 @@ import com.algaworks.algasensors.temperature.monitoring.domain.model.SensorId;
 import com.algaworks.algasensors.temperature.monitoring.domain.repository.SensorAlertRepository;
 import io.hypersistence.tsid.TSID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
-@RequestMapping("/api/sensors/{sensorId}/alert")
+@RequestMapping("/sensors/{sensorId}/alert")
 @RequiredArgsConstructor
 public class SensorAlertController {
 
@@ -36,18 +35,12 @@ public class SensorAlertController {
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
     public SensorAlertOutput update(@PathVariable TSID sensorId, @RequestBody SensorAlert sensorAlert) {
-        SensorAlert found = repository.findById(new SensorId(sensorId)).orElse(null);
-        if (found == null) {
-            return getSensorAlertOutput(repository.save(
-                    SensorAlert.builder()
-                            .id(new SensorId(sensorId))
-                            .maxTemperature(sensorAlert.getMaxTemperature())
-                            .minTemperature(sensorAlert.getMinTemperature())
-                    .build()));
-        }
+        SensorAlert found = repository
+                .findById(new SensorId(sensorId))
+                .orElse(new SensorAlert(new SensorId(sensorId)));
         found.setMaxTemperature(sensorAlert.getMaxTemperature());
         found.setMinTemperature(sensorAlert.getMinTemperature());
-        return getSensorAlertOutput(repository.save(found));
+        return getSensorAlertOutput(repository.saveAndFlush(found));
     }
 
     @DeleteMapping

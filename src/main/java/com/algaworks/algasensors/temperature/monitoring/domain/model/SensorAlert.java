@@ -21,4 +21,8 @@ public class SensorAlert {
     private SensorId id;
     private Double maxTemperature;
     private Double minTemperature;
+
+    public SensorAlert(SensorId sensorId) {
+        id = sensorId;
+    }
 }

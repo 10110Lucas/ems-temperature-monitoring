@@ -20,7 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.Duration;
 
 @RestController
-@RequestMapping("/api/sensors/{sensorId}/monitoring")
+@RequestMapping("/sensors/{sensorId}/monitoring")
 @RequiredArgsConstructor
 public class SensorMonitoringController {
 
