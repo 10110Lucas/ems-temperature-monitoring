@@ -34,7 +34,7 @@ spring:
           multiplier: 2
           max-attempts: 3
 
-logging:
-  level:
-    org.springframework.web: DEBUG
-    org.hibernate.SQL: DEBUG
+#logging:
+#  level:
+#    org.springframework.web: DEBUG
+#    org.hibernate.SQL: DEBUG
